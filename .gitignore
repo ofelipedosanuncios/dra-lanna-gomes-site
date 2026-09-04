@@ -1,0 +1,5 @@
+# nada de artefatos locais
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
