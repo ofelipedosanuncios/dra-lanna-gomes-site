@@ -36,10 +36,10 @@ def header(current, lp=False):
   <div class="wrap topbar__in">
     <a class="brand" href="index.html">
       <span class="brand__name">Dra. Lanna Gomes</span>
-      <span class="brand__tag">Endocrinologia e Metabologia</span>
+      <span class="brand__tag">Endocrinologista e Metabologista</span>
     </a>
     <nav class="nav" aria-label="Principal">
-      <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Agendar avaliação</a>
+      <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Agendar consulta</a>
     </nav>
   </div>
 </header>'''
@@ -52,7 +52,7 @@ def header(current, lp=False):
   <div class="wrap topbar__in">
     <a class="brand" href="index.html">
       <span class="brand__name">Dra. Lanna Gomes</span>
-      <span class="brand__tag">Endocrinologia e Metabologia</span>
+      <span class="brand__tag">Endocrinologista e Metabologista</span>
     </a>
     <nav class="nav" aria-label="Principal">
       <div class="nav__links">
@@ -69,8 +69,9 @@ def header(current, lp=False):
 CREDBAR = '''<div class="credbar">
   <div class="wrap">
     <ul>
-      <li><strong>CRM-GO 19.507 · RQE 9.755</strong></li>
-      <li>Endocrinologista e Metabologista</li>
+      <li><strong>Dra. Lanna Gomes</strong></li>
+      <li>Médica · CRM-GO 19.507</li>
+      <li><strong>Endocrinologista e Metabologista · RQE 9.755</strong></li>
       <li>Mestra pela UNIFESP</li>
       <li>Membro titular da SBEM</li>
       <li>20 anos de formação médica</li>
@@ -79,14 +80,41 @@ CREDBAR = '''<div class="credbar">
   </div>
 </div>'''
 
-def cta(title, text, link, note="Retornamos em horário comercial."):
+CTA_NOTE = ("Nossa equipe informa valores, horários disponíveis e orientações "
+            "para a consulta pelo WhatsApp.")
+
+
+def leadform(origem):
+    '''Formulário de contato. O destino fica em FORM_ENDPOINT (assets/site.js);
+    enquanto ele estiver vazio, o envio abre o WhatsApp já preenchido, de modo
+    que nenhum contato se perde. Sem JS o formulário não aparece — o botão do
+    WhatsApp logo acima continua sendo o caminho.'''
+    return f'''<form class="leadform" data-origem="{origem}" novalidate>
+      <p class="leadform__intro">Prefere receber o contato da nossa equipe? Deixe seu WhatsApp.</p>
+      <div class="leadform__row">
+        <label class="leadform__field">
+          <span>Nome</span>
+          <input type="text" name="nome" autocomplete="name" placeholder="Como podemos te chamar" required>
+        </label>
+        <label class="leadform__field">
+          <span>WhatsApp</span>
+          <input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="(62) 90000-0000" required>
+        </label>
+      </div>
+      <button class="btn btn--light leadform__send" type="submit">Falar com a equipe</button>
+      <p class="leadform__msg" role="status" aria-live="polite" hidden></p>
+    </form>'''
+
+
+def cta(title, text, link, note=CTA_NOTE, origem="site"):
     return f'''<section class="section cta">
   <div class="wrap cta__in reveal">
     <p class="eyebrow eyebrow--center">Primeiro passo</p>
     <h2 class="h-lg split">{title}</h2>
     <p class="lede">{text}</p>
-    <a class="btn btn--light" href="{link}" target="_blank" rel="noopener">Falar com a equipe no WhatsApp {ARROW}</a>
+    <a class="btn btn--light" href="{link}" target="_blank" rel="noopener">Quero agendar minha consulta {ARROW}</a>
     <p class="cta__note">{note}</p>
+    {leadform(origem)}
   </div>
 </section>'''
 
@@ -98,7 +126,7 @@ FOOTER = f'''<footer class="footer">
         <b>Dra. Lanna Gomes</b>
         <span class="role">Médica</span>
         CRM-GO 19.507<br>
-        Endocrinologia e Metabologia — RQE 9.755
+        Endocrinologista e Metabologista — RQE 9.755
       </div>
     </div>
     <div>
@@ -149,6 +177,7 @@ def page(fname, title, desc, body, current=None, lp=False, walink=WA_HOME):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
+<noscript><style>.leadform{{display:none}}</style></noscript>
 </head>
 <body>
 
@@ -169,7 +198,7 @@ def page(fname, title, desc, body, current=None, lp=False, walink=WA_HOME):
     print("gerado:", fname)
 
 
-def lp_hero(kicker, h1, sub, place, link, label="Agendar minha avaliação"):
+def lp_hero(kicker, h1, sub, place, link, label="Quero agendar minha consulta"):
     return f'''<section class="hero">
   <div class="wrap hero__in">
     <div class="hero__text">
@@ -205,8 +234,9 @@ AUTORIDADE = '''<section class="section section--tight">
       <p class="eyebrow">Quem conduz</p>
       <h2 class="h-md split">Dra. Lanna Gomes</h2>
       <div class="stack-lg" style="margin-top:1.3rem">
-        <p>Médica há 20 anos, com trajetória construída na Clínica Médica, Endocrinologia e Metabologia. Graduada pela Faculdade de Medicina de Marília (FAMEMA), com título de especialista reconhecido pela AMB/SBEM e mestrado em Ciências pela UNIFESP.</p>
-        <p>Membro titular da Sociedade Brasileira de Endocrinologia e Metabologia. Atende no Vosso Instituto, no Órion Business &amp; Health Complex, em Goiânia.</p>
+        <p>Com 20 anos de formação médica, a trajetória da Dra. Lanna Gomes foi construída sobre uma base sólida em Clínica Médica, Endocrinologia e Metabologia: dois anos de Residência Médica em Clínica Médica e, na sequência, dois anos de Residência Médica em Endocrinologia e Metabologia, depois da graduação pela Faculdade de Medicina de Marília (FAMEMA).</p>
+        <p>É Endocrinologista e Metabologista, com RQE 9.755, Mestra em Ciências pela UNIFESP e membro titular da Sociedade Brasileira de Endocrinologia e Metabologia.</p>
+        <p>Atendimento no Vosso Instituto, localizado no Órion Business &amp; Health Complex, no Setor Marista, em Goiânia.</p>
         <p style="margin-top:1.4rem"><a class="link-arrow" href="a-medica.html">Conhecer a trajetória completa</a></p>
       </div>
     </div>
@@ -257,10 +287,10 @@ def checks(items):
 
 
 PASSOS = [
-    ("Contato", "Você fala com a nossa equipe pelo WhatsApp e entende se o seu caso é para atendimento presencial ou online."),
-    ("Consulta inicial", "Avaliação aprofundada com a Dra. Lanna: história clínica, exame físico, avaliação da composição corporal, revisão dos exames anteriores e solicitação do que faltar."),
-    ("Retorno com o plano", "Interpretação dos exames e definição do plano individualizado: conduta médica, terapias indicadas e os parâmetros que serão acompanhados no seu caso."),
-    ("Acompanhamento", "Consultas de seguimento, revisão dos exames e ajuste da conduta ao longo do tempo."),
+    ("Contato com a equipe", "Você fala com nossa equipe pelo WhatsApp e recebe todas as informações sobre a consulta."),
+    ("Consulta médica", "Avaliação aprofundada com a Dra. Lanna Gomes, considerando sua história clínica, exame físico, composição corporal e exames disponíveis."),
+    ("Definição da conduta", "A partir da avaliação, são definidos os próximos passos e, quando necessário, exames complementares, tratamento e estratégia de acompanhamento."),
+    ("Acompanhamento quando indicado", "A frequência das consultas e reavaliações é individualizada de acordo com o diagnóstico, o tratamento e a necessidade de cada paciente."),
 ]
 
 # =====================================================================
@@ -269,7 +299,7 @@ PASSOS = [
 emag = f'''{lp_hero(
   'Emagrecimento e saúde metabólica <span>·</span> Goiânia/GO',
   'Emagrecimento com acompanhamento médico em Goiânia',
-  'Avaliação do seu metabolismo, dos seus hormônios e da sua composição corporal, plano individualizado e consultas de seguimento com a Dra. Lanna Gomes — endocrinologista e metabologista, mestra pela UNIFESP, 20 anos de formação médica.',
+  'Avaliação do seu metabolismo, dos seus hormônios e da sua composição corporal, conduta individualizada e acompanhamento quando indicado, com a Dra. Lanna Gomes — Médica, CRM-GO 19.507, Endocrinologista e Metabologista, RQE 9.755, mestra pela UNIFESP e 20 anos de formação médica.',
   '<strong>Vosso Instituto</strong> <span class="dot">·</span> Órion Business &amp; Health Complex <span class="dot">·</span> Setor Marista, Goiânia — casos selecionados também online',
   WA_EMAG)}
 
@@ -305,7 +335,8 @@ emag = f'''{lp_hero(
         <h2 class="h-md split">Emagrecimento médico não é dieta com receita</h2>
       </div>
       <div>
-        <p>É um tratamento clínico conduzido por médica: avaliação da composição corporal, do perfil hormonal e metabólico, revisão dos seus exames e definição de conduta — que pode incluir medicação, terapias nutricionais injetáveis, ajuste nutricional e recursos complementares, sempre conforme indicação clínica.</p>
+        <p>É um tratamento clínico conduzido por médica: avaliação da composição corporal, do perfil hormonal e metabólico e leitura dos seus exames antes de qualquer prescrição.</p>
+        <p>A conduta é individualizada e pode incluir tratamento medicamentoso, estratégia nutricional, terapias nutricionais injetáveis por via endovenosa ou intramuscular e outros recursos terapêuticos, quando indicados.</p>
         <p style="margin-bottom:0"><strong>O que define o tratamento é o seu caso. Não um pacote.</strong></p>
       </div>
     </div>
@@ -320,7 +351,7 @@ emag = f'''{lp_hero(
     </div>
     <div class="reveal stack-lg" data-d="1">
       <p class="lede">Duas pessoas podem perder o mesmo peso e ter resultados clinicamente opostos: uma preservando massa muscular, outra perdendo músculo e piorando o próprio metabolismo.</p>
-      <p>Por isso o tratamento acompanha mais do que o peso: composição corporal, massa muscular, parâmetros metabólicos e risco cardiometabólico. É isso que determina como o seu corpo vai responder — e o que torna possível sustentar o resultado depois.</p>
+      <p>Por isso o tratamento acompanha mais do que o peso: composição corporal, massa muscular, parâmetros metabólicos e risco cardiometabólico. É esse conjunto que ajuda a entender como o seu corpo está respondendo — e o que torna possível sustentar o resultado ao longo do tempo.</p>
     </div>
   </div>
 </section>
@@ -335,7 +366,7 @@ emag = f'''{lp_hero(
       <ul class="checks">
 {checks([
   "<strong>Resistência à insulina e alterações glicêmicas</strong>",
-  "<strong>Tireoide</strong> — hipotireoidismo e disfunções subclínicas",
+  "<strong>Função tireoidiana</strong> e outras alterações endócrinas, quando clinicamente indicadas",
   "<strong>Alterações hormonais do climatério e da pós-menopausa</strong>",
   "<strong>Deficiências de vitaminas e minerais</strong> que afetam energia e metabolismo",
   "<strong>Perda de massa muscular</strong> e mudanças na composição corporal",
@@ -353,14 +384,14 @@ emag = f'''{lp_hero(
     <div class="panel spot reveal" style="text-align:center;max-width:52rem;margin-inline:auto">
       <p class="eyebrow eyebrow--center">Manutenção</p>
       <h2 class="h-md split">O tratamento não termina quando o peso muda</h2>
-      <p style="margin:1.2rem auto 0;max-width:44rem">A fase de manutenção é parte do plano, não um pós-tratamento. Ela envolve revisão periódica dos exames, acompanhamento da composição corporal e ajuste da conduta conforme o seu corpo responde ao longo do tempo.</p>
+      <p style="margin:1.2rem auto 0;max-width:44rem">Por isso, acompanhar a evolução da composição corporal e, quando indicado, dos exames complementares ajuda a orientar decisões e ajustes de conduta ao longo do tratamento e também na fase de manutenção.</p>
     </div>
   </div>
 </section>
 
 {AUTORIDADE}
 
-{steps_block("Como começa o seu acompanhamento", PASSOS)}
+{steps_block("Como começa seu cuidado", PASSOS)}
 
 {faq_block([
   ("Vocês prescrevem medicação para emagrecer?",
@@ -375,9 +406,9 @@ emag = f'''{lp_hero(
    "Alguns casos podem ser acompanhados online, conforme critério médico. Fale com a equipe e avaliamos."),
 ])}
 
-{cta("Comece pela avaliação",
-     "Fale com a nossa equipe e entenda como funciona a consulta, os valores e a agenda.",
-     WA_EMAG)}'''
+{cta("Comece pela avaliação médica",
+     "A conduta só é definida depois de entender o que está acontecendo com o seu metabolismo, os seus hormônios e a sua composição corporal.",
+     WA_EMAG, origem="emagrecimento")}'''
 
 page("emagrecimento.html",
      "Emagrecimento com Acompanhamento Médico em Goiânia | Dra. Lanna Gomes",
@@ -390,7 +421,7 @@ page("emagrecimento.html",
 clim = f'''{lp_hero(
   'Climatério e menopausa <span>·</span> Goiânia/GO',
   'Climatério e menopausa: tratamento médico individualizado em Goiânia',
-  'Avaliação hormonal e metabólica integrada, conduta individualizada e acompanhamento contínuo com a Dra. Lanna Gomes — endocrinologista e metabologista, mestra pela UNIFESP, 20 anos de formação médica.',
+  'Avaliação hormonal e metabólica integrada, conduta individualizada e acompanhamento quando indicado, com a Dra. Lanna Gomes — Médica, CRM-GO 19.507, Endocrinologista e Metabologista, RQE 9.755, mestra pela UNIFESP e 20 anos de formação médica.',
   '<strong>Vosso Instituto</strong> <span class="dot">·</span> Órion Business &amp; Health Complex <span class="dot">·</span> Setor Marista, Goiânia',
   WA_CLIM)}
 
@@ -445,7 +476,7 @@ clim = f'''{lp_hero(
       <h2 class="h-lg split">O que muda nessa fase vai além do que se sente</h2>
     </div>
     <div class="reveal stack-lg" data-d="1">
-      <p class="lede">Com a queda hormonal, mudam o metabolismo, a composição corporal, a massa muscular, a densidade óssea, o perfil de colesterol e o risco cardiovascular. Muitas dessas mudanças acontecem em silêncio, antes de qualquer sintoma.</p>
+      <p class="lede">Ao longo da transição menopausal, podem ocorrer mudanças no metabolismo, na composição corporal, na massa muscular, na saúde óssea e no perfil cardiometabólico. Parte delas pode acontecer em silêncio, antes de qualquer sintoma.</p>
       <p>Por isso a avaliação não olha só para os hormônios. Ela olha para o conjunto: glicemia, tireoide, colesterol, vitaminas, composição corporal e saúde óssea.</p>
       <p class="pullquote">Tratar essa fase é cuidar de como você vai chegar aos próximos vinte anos.</p>
     </div>
@@ -463,7 +494,7 @@ clim = f'''{lp_hero(
 {checks([
   "<strong>Sintomas do climatério</strong> — calor, sono, humor, energia",
   "<strong>Saúde hormonal e metabólica</strong> — avaliação integrada, com terapia hormonal quando indicada",
-  "<strong>Composição corporal e massa muscular</strong> — o que mais muda nessa fase e o que mais responde ao tratamento",
+  "<strong>Composição corporal e massa muscular</strong> — avaliação das mudanças que podem ocorrer ao longo dessa fase",
   "<strong>Saúde óssea</strong> — avaliação e prevenção",
   "<strong>Risco cardiometabólico</strong> — glicemia, colesterol e pressão dentro do plano",
   "<strong>Sexualidade</strong> — libido, ressecamento e desconforto, tratados como parte do cuidado",
@@ -476,7 +507,7 @@ clim = f'''{lp_hero(
 
 {AUTORIDADE}
 
-{steps_block("Como começa o seu acompanhamento", PASSOS)}
+{steps_block("Como começa seu cuidado", PASSOS)}
 
 {faq_block([
   ("Como vocês decidem se a terapia hormonal é indicada para mim?",
@@ -492,12 +523,12 @@ clim = f'''{lp_hero(
 ])}
 
 {cta("Sua avaliação começa com uma conversa",
-     "Fale com a nossa equipe e entenda como funciona a consulta.",
-     WA_CLIM)}'''
+     "A decisão sobre terapia hormonal — ou sobre qualquer outra conduta — vem depois da avaliação, nunca antes dela.",
+     WA_CLIM, origem="climaterio")}'''
 
 page("climaterio-menopausa.html",
      "Climatério e Menopausa: Tratamento Médico em Goiânia | Dra. Lanna Gomes",
-     "Avaliação hormonal e metabólica integrada para climatério e menopausa, com conduta individualizada e acompanhamento contínuo. Endocrinologista em Goiânia.",
+     "Avaliação hormonal e metabólica integrada para climatério e menopausa, com conduta individualizada e acompanhamento quando indicado. Endocrinologista em Goiânia.",
      clim, lp=True, walink=WA_CLIM)
 
 # =====================================================================
@@ -506,11 +537,11 @@ page("climaterio-menopausa.html",
 medica = f'''<section class="hero">
   <div class="wrap hero__in">
     <div class="hero__text">
-      <p class="hero__kicker">Endocrinologista e Metabologista <span>·</span> CRM-GO 19.507 · RQE 9.755</p>
+      <p class="hero__kicker">Médica <span>·</span> CRM-GO 19.507 <span>·</span> Endocrinologista e Metabologista <span>·</span> RQE 9.755</p>
       <h1 class="h-xl split">Dra. Lanna Gomes</h1>
-      <p class="lede hero__sub reveal">Médica há 20 anos, com trajetória construída na Clínica Médica, Endocrinologia e Metabologia.</p>
+      <p class="lede hero__sub reveal">Com 20 anos de formação médica e uma trajetória construída sobre uma base sólida em Clínica Médica, Endocrinologia e Metabologia.</p>
       <div class="hero__actions reveal" data-d="1">
-        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Agendar consulta com a Dra. Lanna {ARROW}</a>
+        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Quero agendar minha consulta {ARROW}</a>
       </div>
       <p class="hero__place reveal" data-d="2"><strong>Vosso Instituto</strong> <span class="dot">·</span> Órion Business &amp; Health Complex <span class="dot">·</span> Setor Marista, Goiânia</p>
     </div>
@@ -535,7 +566,7 @@ medica = f'''<section class="hero">
       <h2 class="h-lg split">Uma base construída em Clínica Médica, Endocrinologia e Metabologia</h2>
     </div>
     <div class="reveal stack-lg" data-d="1">
-      <p class="lede">Graduada em Medicina pela Faculdade de Medicina de Marília (FAMEMA), possui formação em Clínica Médica e em Endocrinologia e Metabologia, com título de especialista reconhecido pela Associação Médica Brasileira e pela Sociedade Brasileira de Endocrinologia e Metabologia, e mestrado em Ciências pelo programa de pós-graduação em Endocrinologia e Metabologia da UNIFESP.</p>
+      <p class="lede">Com 20 anos de formação médica, a trajetória da Dra. Lanna Gomes foi construída sobre uma base sólida em Clínica Médica, Endocrinologia e Metabologia. Após a graduação em Medicina pela Faculdade de Medicina de Marília (FAMEMA), realizou dois anos de Residência Médica em Clínica Médica e, na sequência, dois anos de Residência Médica em Endocrinologia e Metabologia. É Endocrinologista e Metabologista, com RQE 9.755, e Mestra em Ciências pelo programa de pós-graduação em Endocrinologia e Metabologia da UNIFESP.</p>
       <p>Ao longo da carreira, acumulou experiência clínica ambulatorial e hospitalar e atuou na indústria farmacêutica como gerente médica científica nas áreas de diabetes e obesidade — experiência que ampliou sua atuação em leitura crítica da evidência científica e atualização terapêutica.</p>
     </div>
   </div>
@@ -551,29 +582,43 @@ medica = f'''<section class="hero">
       <div class="method__item reveal">
         <span class="method__n">01</span>
         <div>
-          <h3 class="h-sm">Especialista com RQE</h3>
-          <p>Título de especialista em Endocrinologia e Metabologia reconhecido pela AMB/SBEM. RQE 9.755.</p>
+          <h3 class="h-sm">Residência Médica em Clínica Médica</h3>
+          <p>Dois anos de residência em Clínica Médica — a base clínica que antecedeu a especialização.</p>
         </div>
       </div>
       <div class="method__item reveal" data-d="1">
         <span class="method__n">02</span>
         <div>
-          <h3 class="h-sm">Mestrado pela UNIFESP</h3>
-          <p>Mestrado em Ciências pelo programa de pós-graduação em Endocrinologia e Metabologia da UNIFESP.</p>
+          <h3 class="h-sm">Residência Médica em Endocrinologia e Metabologia</h3>
+          <p>Dois anos de residência na especialidade, com título reconhecido pela AMB/SBEM. Endocrinologista e Metabologista, RQE 9.755.</p>
         </div>
       </div>
       <div class="method__item reveal" data-d="2">
         <span class="method__n">03</span>
         <div>
-          <h3 class="h-sm">Membro titular da SBEM</h3>
-          <p>Sociedade Brasileira de Endocrinologia e Metabologia.</p>
+          <h3 class="h-sm">Mestrado pela UNIFESP</h3>
+          <p>Mestra em Ciências pelo programa de pós-graduação em Endocrinologia e Metabologia da UNIFESP.</p>
         </div>
       </div>
       <div class="method__item reveal" data-d="3">
         <span class="method__n">04</span>
         <div>
+          <h3 class="h-sm">Membro titular da SBEM</h3>
+          <p>Sociedade Brasileira de Endocrinologia e Metabologia.</p>
+        </div>
+      </div>
+      <div class="method__item reveal" data-d="4">
+        <span class="method__n">05</span>
+        <div>
           <h3 class="h-sm">Formação complementar</h3>
-          <p>Pós-graduação em Nutrologia Esportiva e formação complementar em Medicina Funcional. Membro da Sottopelle, com participação em programa de educação continuada em terapia hormonal e implantes absorvíveis.</p>
+          <p>Pós-graduação em Nutrologia Esportiva e formação complementar em Medicina Funcional.</p>
+        </div>
+      </div>
+      <div class="method__item reveal" data-d="5">
+        <span class="method__n">06</span>
+        <div>
+          <h3 class="h-sm">Membro da Sottopelle</h3>
+          <p>Participação em programa de educação continuada em terapia hormonal e implantes absorvíveis.</p>
         </div>
       </div>
     </div>
@@ -589,18 +634,29 @@ medica = f'''<section class="hero">
     <div class="reveal stack-lg" data-d="1">
       <p class="lede">Sua prática é direcionada à investigação e ao cuidado integrado da saúde hormonal e metabólica, com atenção especial a emagrecimento, composição corporal, climatério, menopausa e saúde da mulher.</p>
       <p>Medicina baseada em evidências, experiência clínica e individualização sustentando cada conduta — sem protocolos prontos.</p>
-      <p class="pullquote">Atende no Vosso Instituto, localizado no Órion Business &amp; Health Complex, no Setor Marista, em Goiânia.</p>
+      <p class="pullquote">Atendimento no Vosso Instituto, localizado no Órion Business &amp; Health Complex, no Setor Marista, em Goiânia.</p>
     </div>
   </div>
 </section>
 
-{cta("Agendar consulta com a Dra. Lanna",
-     "Fale com a nossa equipe. Explicamos como funciona a consulta, os valores e a disponibilidade de agenda.",
-     WA_HOME)}'''
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="panel spot reveal idcard">
+      <p class="eyebrow eyebrow--center">Identificação profissional</p>
+      <p class="idcard__name">Dra. Lanna Gomes</p>
+      <p class="idcard__line">Médica <span class="dot">·</span> CRM-GO 19.507</p>
+      <p class="idcard__line">Endocrinologista e Metabologista <span class="dot">·</span> RQE 9.755</p>
+    </div>
+  </div>
+</section>
+
+{cta("Agendar consulta com a Dra. Lanna Gomes",
+     "A consulta é o ponto em que a sua história clínica, o seu exame físico e os seus exames passam a ser lidos em conjunto.",
+     WA_HOME, origem="a-medica")}'''
 
 page("a-medica.html",
      "Dra. Lanna Gomes — Endocrinologista e Metabologista | CRM-GO 19.507",
-     "Médica há 20 anos, com trajetória em Clínica Médica, Endocrinologia e Metabologia. Mestra pela UNIFESP e membro titular da SBEM. Atende no Vosso Instituto, em Goiânia.",
+     "Endocrinologista e Metabologista em Goiânia, RQE 9.755. Residência em Clínica Médica e em Endocrinologia e Metabologia, mestrado pela UNIFESP e 20 anos de formação médica.",
      medica, current="a-medica.html")
 
 # =====================================================================
@@ -610,10 +666,10 @@ inst = f'''<section class="hero">
   <div class="wrap hero__in">
     <div class="hero__text">
       <p class="hero__kicker">Vosso Instituto <span>·</span> Órion Business &amp; Health Complex</p>
-      <h1 class="h-xl split">Um acompanhamento, não um atendimento avulso</h1>
-      <p class="lede hero__sub reveal">Condições hormonais e metabólicas mudam ao longo do tempo. Por isso, uma avaliação isolada nem sempre é suficiente: acompanhar significa revisar exames, sintomas, composição corporal e resposta ao tratamento, e ajustar a conduta quando necessário.</p>
+      <h1 class="h-xl split">A avaliação médica define o que vem depois</h1>
+      <p class="lede hero__sub reveal">Condições hormonais e metabólicas mudam ao longo do tempo. Por isso, para parte dos casos, uma avaliação isolada não é suficiente: acompanhar significa revisar exames, sintomas, composição corporal e resposta ao tratamento, e ajustar a conduta quando necessário.</p>
       <div class="hero__actions reveal" data-d="1">
-        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Agendar minha consulta {ARROW}</a>
+        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Quero agendar minha consulta {ARROW}</a>
       </div>
       <p class="hero__place reveal" data-d="2"><strong>Av. Portugal, 1148</strong> <span class="dot">·</span> Salas 2407/2409 <span class="dot">·</span> Setor Marista, Goiânia/GO</p>
     </div>
@@ -630,12 +686,12 @@ inst = f'''<section class="hero">
 <section class="section">
   <div class="wrap grid-2">
     <div class="reveal">
-      <p class="eyebrow">As jornadas</p>
-      <h2 class="h-lg split">Jornadas de acompanhamento</h2>
+      <p class="eyebrow">O acompanhamento</p>
+      <h2 class="h-lg split">Primeiro a avaliação. Depois, o que cada paciente precisa.</h2>
     </div>
     <div class="reveal stack-lg" data-d="1">
-      <p class="lede">As jornadas de acompanhamento são programas médicos personalizados. Podem incluir consultas periódicas, revisão de exames, integração terapêutica, terapias nutricionais injetáveis, testes genéticos e funcionais, acompanhamento multidisciplinar e recursos tecnológicos integrados ao tratamento.</p>
-      <p class="pullquote">O acompanhamento é definido individualmente após avaliação médica, conforme indicação clínica e necessidade de cada paciente.</p>
+      <p class="lede">Para pacientes que se beneficiam de acompanhamento longitudinal, a frequência e a estrutura são definidas após a avaliação médica. O objetivo é permitir revisão clínica, acompanhamento da composição corporal e, quando indicado, de exames complementares, além de ajustes da conduta ao longo do tratamento.</p>
+      <p>Quando houver indicação, o plano também pode integrar acompanhamento multidisciplinar, terapias nutricionais injetáveis, testes complementares e outros recursos terapêuticos.</p>
     </div>
   </div>
 </section>
@@ -644,11 +700,11 @@ inst = f'''<section class="hero">
   <div class="wrap grid-2">
     <div class="reveal">
       <p class="eyebrow">Medicina de precisão</p>
-      <h2 class="h-lg split">Testes que ajudam a personalizar a conduta</h2>
+      <h2 class="h-lg split">Ferramentas complementares, usadas quando acrescentam informação</h2>
     </div>
     <div class="reveal stack-lg" data-d="1">
-      <p class="lede">Perfil alimentar genético, microbioma intestinal e teste nutrigenético ajudam a personalizar a conduta quando há indicação.</p>
-      <p>Todos são solicitados, interpretados e integrados ao plano exclusivamente pela médica.</p>
+      <p class="lede">Perfil alimentar genético, microbioma intestinal, teste nutrigenético e outros exames complementares estão disponíveis e são utilizados quando há indicação clínica.</p>
+      <p>O que sustenta a conduta não é o acesso aos testes, e sim a leitura médica: investigar, interpretar os resultados e decidir quando essas ferramentas realmente acrescentam informação relevante para o caso de cada paciente.</p>
     </div>
   </div>
 </section>
@@ -664,7 +720,7 @@ inst = f'''<section class="hero">
       <article class="card spot reveal" data-d="1">
         <span class="card__num">02</span>
         <h3 class="h-sm">A equipe</h3>
-        <p>Uma equipe preparada acompanha cada paciente ao longo do processo, do agendamento aos retornos.</p>
+        <p>Uma equipe preparada acompanha cada paciente ao longo do processo, do agendamento ao acompanhamento.</p>
       </article>
       <article class="card spot reveal" data-d="2">
         <span class="card__num">03</span>
@@ -675,7 +731,7 @@ inst = f'''<section class="hero">
   </div>
 </section>
 
-{steps_block("Como começa o seu acompanhamento", PASSOS)}
+{steps_block("Como começa seu cuidado", PASSOS)}
 
 <section class="section section--tight">
   <div class="wrap">
@@ -687,9 +743,9 @@ inst = f'''<section class="hero">
   </div>
 </section>
 
-{cta("O primeiro passo é a avaliação",
-     "Fale com a nossa equipe. Explicamos como funciona a consulta, os valores e a disponibilidade de agenda.",
-     WA_HOME)}'''
+{cta("O primeiro passo é a avaliação médica",
+     "É a partir dela que se define o que faz sentido para o seu caso — e se há indicação de acompanhamento ao longo do tempo.",
+     WA_HOME, origem="instituto")}'''
 
 page("instituto.html",
      "Vosso Instituto — Acompanhamento médico em Goiânia | Dra. Lanna Gomes",
@@ -704,9 +760,9 @@ tec = f'''<section class="hero">
     <div class="hero__text">
       <p class="hero__kicker">Recursos do tratamento <span>·</span> Goiânia/GO</p>
       <h1 class="h-xl split">Recursos tecnológicos dentro do tratamento médico</h1>
-      <p class="lede hero__sub reveal">As tecnologias disponíveis no atendimento não são oferecidas como serviço isolado. Elas entram quando há indicação clínica, como parte de um plano médico — normalmente em contextos de emagrecimento, mudança de composição corporal e pós-menopausa.</p>
+      <p class="lede hero__sub reveal">As tecnologias disponíveis no atendimento não são oferecidas como serviço isolado. São recursos complementares, utilizados quando houver indicação, dentro de uma estratégia médica individualizada — normalmente em contextos de emagrecimento, mudança de composição corporal e pós-menopausa.</p>
       <div class="hero__actions reveal" data-d="1">
-        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Agendar avaliação {ARROW}</a>
+        <a class="btn" href="{WA_HOME}" target="_blank" rel="noopener">Quero agendar minha consulta {ARROW}</a>
       </div>
       <p class="hero__place reveal" data-d="2"><strong>Vosso Instituto</strong> <span class="dot">·</span> Órion Business &amp; Health Complex <span class="dot">·</span> Setor Marista, Goiânia</p>
     </div>
@@ -726,12 +782,12 @@ tec = f'''<section class="hero">
       <article class="card spot reveal">
         <span class="card__num">01</span>
         <h3 class="h-sm">Laser Ultra</h3>
-        <p>Recurso de apoio ao tratamento da gordura localizada e à composição corporal, integrado à conduta médica.</p>
+        <p>Recurso complementar, utilizado quando houver indicação, dentro de uma estratégia médica individualizada — em geral em contextos de mudança de composição corporal.</p>
       </article>
       <article class="card spot reveal" data-d="1">
         <span class="card__num">02</span>
         <h3 class="h-sm">Liftera — ultrassom microfocado</h3>
-        <p>Estímulo de colágeno e melhora da flacidez facial e corporal — relevante em processos de emagrecimento e na pós-menopausa, quando a mudança de composição corporal e a queda hormonal afetam a pele.</p>
+        <p>Recurso complementar, utilizado quando houver indicação, dentro de uma estratégia médica individualizada — em geral em contextos de emagrecimento e de pós-menopausa.</p>
       </article>
     </div>
   </div>
@@ -745,9 +801,9 @@ tec = f'''<section class="hero">
   </div>
 </section>
 
-{cta("Agendar avaliação",
-     "Fale com a nossa equipe e entenda como funciona a consulta.",
-     WA_HOME)}'''
+{cta("O primeiro passo é a avaliação médica",
+     "Os recursos disponíveis entram depois, quando há indicação clínica dentro de uma estratégia individualizada.",
+     WA_HOME, origem="tecnologias")}'''
 
 page("tecnologias.html",
      "Tecnologias integradas ao tratamento médico | Dra. Lanna Gomes",

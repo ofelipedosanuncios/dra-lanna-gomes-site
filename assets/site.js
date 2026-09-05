@@ -59,6 +59,78 @@
     });
   }
 
+  /* ------------------------------------------------ formulário de contato
+     Destino dos envios. Enquanto FORM_ENDPOINT estiver vazio, o envio abre o
+     WhatsApp com os dados já preenchidos — nenhum contato se perde e nenhuma
+     confirmação falsa é exibida. Basta colar aqui a URL do endpoint (um Apps
+     Script, por exemplo) para que os dados passem a ser recebidos por lá e a
+     mensagem de confirmação combinada com a médica apareça. */
+  var FORM_ENDPOINT = "";
+  var WA_NUMERO = "5562982102480";
+
+  document.querySelectorAll(".leadform").forEach(function (form) {
+    var msg = form.querySelector(".leadform__msg");
+    var send = form.querySelector(".leadform__send");
+    var rotulo = send ? send.textContent : "";
+
+    function aviso(texto) {
+      if (!msg) return;
+      msg.textContent = texto;
+      msg.hidden = false;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var campoNome = form.elements.nome;
+      var campoZap = form.elements.whatsapp;
+      var nome = (campoNome.value || "").trim();
+      var zap = (campoZap.value || "").trim();
+      var digitos = zap.replace(/\D/g, "");
+
+      campoNome.setAttribute("aria-invalid", nome ? "false" : "true");
+      campoZap.setAttribute("aria-invalid", digitos.length >= 10 ? "false" : "true");
+
+      if (!nome) {
+        aviso("Escreva o seu nome para continuar.");
+        campoNome.focus();
+        return;
+      }
+      if (digitos.length < 10) {
+        aviso("Confira o seu WhatsApp com o DDD, por favor.");
+        campoZap.focus();
+        return;
+      }
+
+      var origem = form.getAttribute("data-origem") || "site";
+
+      if (!FORM_ENDPOINT) {
+        var texto = "Olá! Vim pelo site. Meu nome é " + nome + " e o meu WhatsApp é " +
+                    zap + ". Gostaria de informações sobre a consulta.";
+        window.open("https://wa.me/" + WA_NUMERO + "?text=" + encodeURIComponent(texto),
+                    "_blank", "noopener");
+        form.classList.add("is-sent");
+        aviso("Abrimos o WhatsApp com os seus dados. É só enviar a mensagem para a nossa equipe.");
+        return;
+      }
+
+      if (send) { send.disabled = true; send.textContent = "Enviando…"; }
+
+      fetch(FORM_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams({
+          nome: nome, whatsapp: zap, origem: origem, pagina: location.pathname
+        })
+      }).then(function () {
+        form.classList.add("is-sent");
+        aviso("Recebemos seus dados. Nossa equipe entrará em contato pelo WhatsApp em horário comercial.");
+      }).catch(function () {
+        if (send) { send.disabled = false; send.textContent = rotulo; }
+        aviso("Não conseguimos enviar agora. Fale com a nossa equipe pelo WhatsApp, logo acima.");
+      });
+    });
+  });
+
   if (!canFx) return;
 
   /* ---------------------------------------- títulos palavra a palavra */
