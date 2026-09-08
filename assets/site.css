@@ -338,18 +338,95 @@ body::after{
 .dark .checks strong{ color:var(--paper); }
 .dark .muted{ color:rgba(250,246,241,.55); }
 
-/* depoimentos */
-.quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(16px,2vw,26px); }
-@media (max-width:900px){ .quotes{ grid-template-columns:1fr; } }
-.quote{
-  background:var(--paper); border:1px solid var(--line); border-radius:3px;
-  padding:clamp(28px,3vw,40px); display:flex; flex-direction:column; gap:1.1rem;
+/* ==========================================================================
+   Avaliações do Google
+   Cartões no formato reconhecível do Google, na paleta do site. No desktop a
+   fita anda sozinha e para quando o mouse entra (ou quando o teclado foca um
+   cartão). No toque não existe hover, então vira rolagem nativa com snap —
+   e aí a duplicata dos cartões não é criada, para não repetir conteúdo.
+   ========================================================================== */
+.revsum{
+  display:flex; align-items:center; gap:clamp(14px,2vw,22px); flex-wrap:wrap;
+  padding:clamp(18px,2.2vw,26px) clamp(20px,2.6vw,30px);
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+  margin-bottom:clamp(26px,3.2vw,40px);
 }
-.quote__mark{ font-family:var(--display); font-size:2.4rem; line-height:.5; color:var(--terra-l); }
-.quote p{ margin:0; font-size:1.04rem; color:var(--body); }
-.quote__by{ margin-top:auto; padding-top:.9rem; border-top:1px solid var(--line); }
-.quote__by b{ display:block; font-size:.98rem; color:var(--ink); }
-.quote__by span{ font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+.revsum__nota{
+  font-family:var(--display); font-size:clamp(2.1rem,3.6vw,2.9rem); line-height:1;
+  color:var(--ink); font-variation-settings:"SOFT" 14,"opsz" 40;
+}
+.revsum__meio{ display:flex; flex-direction:column; gap:.3rem; margin-right:auto; }
+.revsum__conta{ font-size:.97rem; color:var(--body); }
+.revsum__conta b{ color:var(--ink); font-weight:700; }
+.revsum .btn{ font-size:.92rem; padding:.85em 1.5em; }
+
+.stars{ display:inline-flex; gap:2px; }
+.stars svg{ width:16px; height:16px; flex:none; color:#F0A73B; }
+.revsum .stars svg{ width:19px; height:19px; }
+
+.revs{ position:relative; }
+/* as bordas somem em degradê nas laterais, para a fita não "cortar" no seco */
+.revs::before, .revs::after{
+  content:""; position:absolute; top:0; bottom:0; width:clamp(18px,3vw,46px);
+  z-index:2; pointer-events:none;
+}
+.revs::before{ left:0; background:linear-gradient(90deg,var(--ivory),transparent); }
+.revs::after{ right:0; background:linear-gradient(270deg,var(--ivory),transparent); }
+
+.revs__viewport{ overflow:hidden; }
+.revs__track{
+  display:flex; align-items:flex-start; gap:clamp(16px,2vw,24px); list-style:none;
+  margin:0; padding:4px 0; width:max-content;
+}
+@keyframes revs-roll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+.rev{
+  width:min(23rem,82vw); flex:none;
+  background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+  padding:clamp(22px,2.4vw,30px);
+  display:flex; flex-direction:column; gap:.85rem;
+  transition:border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.rev:hover{ border-color:var(--terra-l); box-shadow:0 20px 40px -30px rgba(34,48,42,.4); }
+.rev__top{ display:flex; align-items:center; gap:.75rem; }
+.rev__avatar{
+  width:40px; height:40px; flex:none; border-radius:50%;
+  display:grid; place-items:center;
+  background:var(--av,#8C8078); color:#fff;
+  font-weight:700; font-size:1.05rem; line-height:1;
+}
+.rev__quem{ display:flex; flex-direction:column; gap:.15rem; min-width:0; }
+.rev__nome{ font-size:1rem; color:var(--ink); font-weight:700; }
+.rev__src{ font-size:.76rem; letter-spacing:.06em; color:var(--muted); }
+.rev__g{ width:18px; height:18px; flex:none; margin-left:auto; }
+.rev__texto{
+  margin:0; font-size:1.01rem; line-height:1.62; color:var(--body);
+  overflow-wrap:break-word;
+}
+
+@media (hover:hover){
+  .revs__track.is-looping{ animation:revs-roll 64s linear infinite; }
+  .revs:hover .revs__track.is-looping,
+  .revs:focus-within .revs__track.is-looping{ animation-play-state:paused; }
+}
+@media (hover:none){
+  .revs__viewport{
+    overflow-x:auto; scroll-snap-type:x mandatory;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch;
+    margin-inline:calc(var(--gut) * -1); padding-inline:var(--gut);
+  }
+  .revs__viewport::-webkit-scrollbar{ display:none; }
+  .rev{ scroll-snap-align:center; }
+  .revs::before, .revs::after{ display:none; }
+}
+@media (prefers-reduced-motion:reduce){
+  .revs__track.is-looping{ animation:none; }
+  .revs__viewport{ overflow-x:auto; }
+}
+@media (max-width:560px){
+  .revsum{ flex-direction:column; align-items:flex-start; }
+  .revsum .btn{ width:100%; justify-content:center; }
+}
 
 /* FAQ */
 .faq{ border-top:1px solid var(--line); }

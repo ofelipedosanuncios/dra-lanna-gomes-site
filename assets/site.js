@@ -59,6 +59,21 @@
     });
   }
 
+  /* --------------------------------------------------- fita de avaliações
+     Duplica os cartões uma vez para o loop fechar sem salto — a animação anda
+     até -50% da fita. Só duplica onde a fita de fato anda: com hover
+     disponível e sem preferência por menos movimento. No toque ela vira
+     rolagem nativa, e aí a cópia só repetiria conteúdo à toa. */
+  var fita = document.querySelector("[data-revs] .revs__track");
+  if (fita && window.matchMedia("(hover: hover)").matches && !reduced) {
+    Array.prototype.slice.call(fita.children).forEach(function (li) {
+      var copia = li.cloneNode(true);
+      copia.setAttribute("aria-hidden", "true");
+      fita.appendChild(copia);
+    });
+    fita.classList.add("is-looping");
+  }
+
   /* ------------------------------------------------ formulário de contato
      Destino dos envios. Enquanto FORM_ENDPOINT estiver vazio, o envio abre o
      WhatsApp com os dados já preenchidos — nenhum contato se perde e nenhuma
