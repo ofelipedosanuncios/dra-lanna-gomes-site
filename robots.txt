@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dralannagomes.com.br/sitemap.xml
+Sitemap: https://dralannagomes.com.br/antigo/sitemap_index.xml

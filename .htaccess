@@ -13,6 +13,14 @@ DirectoryIndex index.html
 Redirect 301 /laser-ultra/ /tecnologias.html
 Redirect 301 /liftera/     /tecnologias.html
 Redirect 301 /blog/        /antigo/blog/
+# Artigos do blog antigo — seguem no ar em /antigo/ e mantêm o que já ranqueiam
+Redirect 301 /lipedema/ /antigo/lipedema/
+Redirect 301 /mounjaro/ /antigo/mounjaro/
+Redirect 301 /hormonios-e-antienvelhecimento/ /antigo/hormonios-e-antienvelhecimento/
+Redirect 301 /tratamento-obesidade-imc-abaixo-de-30/ /antigo/tratamento-obesidade-imc-abaixo-de-30/
+Redirect 301 /resistencia-a-insulina-em-mulheres/ /antigo/resistencia-a-insulina-em-mulheres/
+Redirect 301 /ganho-peso-apos-30/ /antigo/ganho-peso-apos-30/
+Redirect 301 /preparacao-pre-operatoria/ /antigo/preparacao-pre-operatoria/
 # Painel do WordPress no lugar novo, para quem digitar o endereço antigo
 Redirect 301 /wp-admin     /antigo/wp-admin
 Redirect 301 /wp-login.php /antigo/wp-login.php
