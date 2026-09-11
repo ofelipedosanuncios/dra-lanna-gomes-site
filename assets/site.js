@@ -74,6 +74,27 @@
     fita.classList.add("is-looping");
   }
 
+  /* ---------------------------------------------------- eventos para o GTM
+     Cada clique em link do WhatsApp vira `whatsapp_click` no dataLayer, com a
+     origem (topo, hero, cta_final, flutuante). O envio do formulário vira
+     `lead_form`. No GTM, a conversão do Google Ads é um gatilho de evento
+     personalizado com esses nomes — nada de seletor de CSS. */
+  window.dataLayer = window.dataLayer || [];
+  function evento(nome, extra) {
+    var dados = { event: nome, pagina: location.pathname };
+    for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) dados[k] = extra[k];
+    window.dataLayer.push(dados);
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href*="wa.me"]');
+    if (!a) return;
+    var origem = a.classList.contains("wa") ? "flutuante"
+      : a.closest(".topbar") ? "topo"
+      : a.closest(".hero") ? "hero"
+      : a.closest(".cta") ? "cta_final" : "outro";
+    evento("whatsapp_click", { origem: origem });
+  });
+
   /* ------------------------------------------------ formulário de contato
      Destino dos envios. Enquanto FORM_ENDPOINT estiver vazio, o envio abre o
      WhatsApp com os dados já preenchidos — nenhum contato se perde e nenhuma
@@ -125,6 +146,7 @@
                     "_blank", "noopener");
         form.classList.add("is-sent");
         aviso("Abrimos o WhatsApp com os seus dados. É só enviar a mensagem para a nossa equipe.");
+        evento("lead_form", { origem: origem, via: "whatsapp" });
         return;
       }
 
@@ -139,6 +161,7 @@
       }).then(function () {
         form.classList.add("is-sent");
         aviso("Recebemos seus dados. Nossa equipe entrará em contato pelo WhatsApp em horário comercial.");
+        evento("lead_form", { origem: origem, via: "endpoint" });
       }).catch(function () {
         if (send) { send.disabled = false; send.textContent = rotulo; }
         aviso("Não conseguimos enviar agora. Fale com a nossa equipe pelo WhatsApp, logo acima.");
